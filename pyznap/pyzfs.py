@@ -8,12 +8,11 @@
     :license: GPLv3, see LICENSE for more details.
 """
 
-
 import subprocess as sp
 from .process import check_output, DatasetNotFoundError, DatasetBusyError
 
 
-def find(path=None, ssh=None, max_depth=None, types=[]):
+def find(path=None, ssh=None, max_depth=None, types=None):
     """Lists filesystems and snapshots for a given path"""
     cmd = ['zfs', 'list']
 
@@ -42,7 +41,7 @@ def find(path=None, ssh=None, max_depth=None, types=[]):
     return [open(name, ssh=ssh, type=type) for name, type in out]
 
 
-def findprops(path=None, ssh=None, max_depth=None, props=['all'], sources=[], types=[]):
+def findprops(path=None, ssh=None, max_depth=None, props=['all'], sources=None, types=None):
     """Lists all properties of a given filesystem"""
     cmd = ['zfs', 'get']
 
@@ -98,6 +97,7 @@ def open(name, ssh=None, type=None):
 
 def roots(ssh=None):
     return find(ssh=ssh, max_depth=0)
+
 
 # note: force means create missing parent filesystems
 def create(name, ssh=None, type='filesystem', props={}, force=False):
@@ -265,8 +265,10 @@ class ZFSDataset(object):
     def unallow(self, *args, **kwargs):
         raise NotImplementedError()
 
+
 class ZFSVolume(ZFSDataset):
     pass
+
 
 class ZFSFilesystem(ZFSDataset):
     def upgrade(self, *args, **kwargs):
@@ -277,6 +279,7 @@ class ZFSFilesystem(ZFSDataset):
 
     def unmount(self, *args, **kwargs):
         raise NotImplementedError()
+
 
 class ZFSSnapshot(ZFSDataset):
     def snapname(self):

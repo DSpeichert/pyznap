@@ -13,7 +13,6 @@ import shutil
 import errno as _errno
 import subprocess as sp
 import socket
-from paramiko import SSHException
 
 PIPE = sp.PIPE
 
@@ -22,25 +21,31 @@ class ZFSError(OSError):
     def __init__(self, dataset):
         super(ZFSError, self).__init__(self.errno, self.strerror, dataset)
 
+
 class DatasetNotFoundError(ZFSError):
     errno = _errno.ENOENT
     strerror = 'dataset does not exist'
+
 
 class DatasetExistsError(ZFSError):
     errno = _errno.EEXIST
     strerror = 'dataset already exists'
 
+
 class DatasetBusyError(ZFSError):
     errno = _errno.EBUSY
     strerror = 'dataset is busy'
+
 
 class HoldTagNotFoundError(ZFSError):
     errno = _errno.ENOENT
     strerror = 'no such tag on this dataset'
 
+
 class HoldTagExistsError(ZFSError):
     errno = _errno.EEXIST
     strerror = 'tag already exists on this dataset'
+
 
 class CompletedProcess(sp.CompletedProcess):
     def check_returncode(self):
@@ -163,7 +168,7 @@ def run(*popenargs, timeout=None, check=False, ssh=None, **kwargs):
         try:
             stdin, stdout, stderr = ssh.exec_command(args, *popenargs[1:], timeout=timeout)
             if kwargs.get('stdin', None):
-                shutil.copyfileobj(kwargs['stdin'], stdin, 128*1024)
+                shutil.copyfileobj(kwargs['stdin'], stdin, 128 * 1024)
             stdin.close()
             retcode = stdout.channel.recv_exit_status()
             stdout, stderr = ''.join(stdout.readlines()), ''.join(stderr.readlines())

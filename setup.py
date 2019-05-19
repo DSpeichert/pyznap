@@ -13,7 +13,6 @@ import os
 import re
 from setuptools import setup
 
-
 DIRNAME = os.path.dirname(os.path.abspath(__file__))
 
 with open(os.path.join(DIRNAME, 'README.md'), 'r') as file:
@@ -59,7 +58,7 @@ setup(
         'Topic :: System :: Archiving :: Backup',
         'Topic :: System :: Filesystems',
     ],
-    entry_points = {
+    entry_points={
         'console_scripts': ['pyznap=pyznap.main:main'],
     },
     zip_safe=False

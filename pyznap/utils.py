@@ -14,7 +14,6 @@ import logging
 from subprocess import Popen, PIPE, TimeoutExpired, CalledProcessError
 from .process import run
 
-from datetime import datetime
 from configparser import (ConfigParser, NoOptionError, MissingSectionHeaderError,
                           DuplicateSectionError, DuplicateOptionError)
 from socket import timeout, gaierror

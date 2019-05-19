@@ -69,7 +69,7 @@ def take_filesystem(filesystem, conf):
             continue
         try:
             _date, _time, snap_type = snap.name.split('_')[-3:]
-            snap_time =  datetime.strptime('{:s}_{:s}'.format(_date, _time), '%Y-%m-%d_%H:%M:%S')
+            snap_time = datetime.strptime('{:s}_{:s}'.format(_date, _time), '%Y-%m-%d_%H:%M:%S')
             snapshots[snap_type].append((snap, snap_time))
         except (ValueError, KeyError):
             continue

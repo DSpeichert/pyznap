@@ -9,13 +9,11 @@
 """
 
 import logging
-from datetime import datetime
 from subprocess import Popen, PIPE, CalledProcessError
 from paramiko.ssh_exception import SSHException
 from .utils import open_ssh, parse_name, exists, check_recv, bytes_fmt
 import pyznap.pyzfs as zfs
 from .process import DatasetBusyError, DatasetNotFoundError, DatasetExistsError
-
 
 # Use mbuffer if installed on the system
 if exists('mbuffer'):
@@ -111,8 +109,8 @@ def send_filesystem(source_fs, dest_name, ssh=None):
     snapshots = source_fs.snapshots()[::-1]
     snapnames = [snap.name.split('@')[1] for snap in snapshots]
     try:
-        snapshot = snapshots[0]     # Most recent snapshot
-        base = snapshots[-1]        # Oldest snapshot
+        snapshot = snapshots[0]  # Most recent snapshot
+        base = snapshots[-1]  # Oldest snapshot
     except IndexError:
         logger.error('No snapshots on {}, cannot send...'.format(source_fs))
         return 1

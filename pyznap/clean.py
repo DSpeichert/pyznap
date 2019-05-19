@@ -9,7 +9,6 @@
 """
 
 import logging
-from datetime import datetime
 from subprocess import CalledProcessError
 from paramiko.ssh_exception import SSHException
 from .utils import open_ssh, parse_name
@@ -151,9 +150,9 @@ def clean_config(config):
                         child_name = child.name
                         parent_name = parent.name
                     # Skip if child has an entry or if any parent entry already in config
-                    child_parent = '/'.join(child_name.split('/')[:-1]) # get parent of child filesystem
+                    child_parent = '/'.join(child_name.split('/')[:-1])  # get parent of child filesystem
                     if ((child_name == parent_name or child_parent.startswith(parent_name)) and
-                        (parent_name in [entry['name'] for entry in config])):
+                            (parent_name in [entry['name'] for entry in config])):
                         break
                 else:
                     clean_filesystem(child, conf)

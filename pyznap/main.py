@@ -12,17 +12,15 @@
 import sys
 import os
 import logging
-from logging.config import fileConfig
 from argparse import ArgumentParser
-from datetime import datetime
 from .utils import read_config, create_config
 from .clean import clean_config
 from .take import take_config
 from .send import send_config
 
-
 DIRNAME = os.path.dirname(os.path.abspath(__file__))
 CONFIG_DIR = '/etc/pyznap/'
+
 
 def _main():
     """pyznap main function. Parses arguments and calls snap/clean/send functions accordingly.
@@ -63,7 +61,7 @@ def _main():
     parser_send.add_argument('-i', '--key', action="store",
                              dest='key', help='ssh key for destination')
 
-    if len(sys.argv)==1:
+    if len(sys.argv) == 1:
         parser.print_help(sys.stderr)
         sys.exit(1)
     args = parser.parse_args()
