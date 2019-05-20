@@ -37,6 +37,7 @@ setup(
     install_requires=[
         'configparser>=3.5.0',
         'paramiko>=2.4.2',
+        'wheel>=0.33.4',
     ],
     extras_require={
         'dev': [

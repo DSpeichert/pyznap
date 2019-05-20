@@ -142,7 +142,7 @@ def read_config(path):
 
     config = []
     options = ['key', 'frequent', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'snap', 'clean',
-               'dest', 'dest_keys']
+               'dest', 'dest_keys', 'snap_rsync_from']
 
     for section in parser.sections():
         dic = {}
@@ -166,6 +166,9 @@ def read_config(path):
                 elif option in ['dest_keys']:
                     dic[option] = [i.strip() if os.path.isfile(i.strip()) else None
                                    for i in value.split(',')]
+                else:
+                    dic[option] = value
+
     # Pass through values recursively
     for parent in config:
         for child in config:

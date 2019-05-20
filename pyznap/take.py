@@ -14,7 +14,7 @@ from subprocess import CalledProcessError
 from paramiko.ssh_exception import SSHException
 from .utils import open_ssh, parse_name
 import pyznap.pyzfs as zfs
-from .process import DatasetBusyError, DatasetNotFoundError, DatasetExistsError
+from .process import check_output, DatasetBusyError, DatasetNotFoundError, DatasetExistsError
 
 
 def take_snap(filesystem, _type):
@@ -155,6 +155,25 @@ def take_config(config):
                          .format(name_log, err.stderr.rstrip()))
             continue
         else:
+            # check if we need to run snap_rsync_from
+            if conf.get('snap_rsync_from', None):
+                mountpoint = children[0].getpropval('mountpoint', None)
+                if not mountpoint:
+                    logger.error('Dataset {:s} is not mounted, cannot rsync!'.format(name_log))
+
+                cmd = ['rsync', '-azhHAX', '--stats', '--inplace', '--numeric-ids', '--delete',
+                       conf.get('snap_rsync_from'), mountpoint]
+
+                logger.info('Running rsync from \'{:s}\' to \'{:s}\''.format(conf.get('snap_rsync_from'), mountpoint))
+                logger.info('Command to execute: {:s}'.format(' '.join(cmd)))
+                try:
+                    out = check_output(cmd, ssh=ssh)
+                    logger.info('Finished rsync: {}'.format(out))
+                except CalledProcessError as err:
+                    logger.error('Error running rsync {:s}: \'{:s}\'...'
+                                 .format(name_log, err.stderr.rstrip()))
+                    continue
+
             # Take recursive snapshot of parent filesystem
             take_filesystem(children[0], conf)
             # Take snapshot of all children that don't have all snapshots yet

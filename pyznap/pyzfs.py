@@ -74,6 +74,8 @@ def findprops(path=None, ssh=None, max_depth=None, props=['all'], sources=None, 
     names = set(map(lambda x: x[0], out))
 
     # return [dict(name=n, property=p, value=v, source=s) for n, p, v, s in out]
+    # actually returns:
+    # {name: {propA: (value, source), propB: (value, source), ...}}
     return {name: {i[1]: (i[2], i[3]) for i in out if i[0] == name} for name in names}
 
 
@@ -225,7 +227,7 @@ class ZFSDataset(object):
         return findprops(self.name, ssh=self.ssh, max_depth=0, props=[prop])[self.name].get(prop, None)
 
     def getpropval(self, prop, default=None):
-        value = self.getprop(prop)['value']
+        value = self.getprop(prop)[0]
         return default if value == '-' else value
 
     def setprop(self, prop, value):
